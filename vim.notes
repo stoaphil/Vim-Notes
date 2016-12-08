@@ -1,0 +1,151 @@
+vim.notes
+
+Keystroke       Action
+=========       ======
+
+BASICS
+------
+
+esc             command (normal) mode
+w               write (save)
+q               quit vim
+q!, ZQ; e!      quit without saving; reloads original version
+ZZ, x           save and quit
+
+BASIC MOVING AROUND         (Remember - can prepend a number to most.)
+-------------------
+
+h               left
+l               right
+j               down line; 10j - down 10 lines
+k               up line
+
+w, e, b         one word right, end of word, one word back
+
+{, }            back, forward one paragraph
+(, )            back, forward one sentence
+
+0, ^            beginning of line; beginning of chars
+$               end of line
+gg              beginning of document
+G, 12G, ``      end of document, go to line 12, back where came from
+
+H, M, L         highest, middle, lowest line on screen
+
+BASIC EDITING
+-------------
+
+i, I            insert at cursor; beginning of line
+a, A            insert after cursor; at end of line
+o, O            insert at new line below, above
+
+x, X            delete under and after cursor, delete before cursor
+dw, d$, d0      delete from cursor to end of word, to end, beg. of line
+dd, dG, dgg     delete line (including blank line); 10dd - delete 10 lines
+D               delete to end of line
+
+yy, yw          copy line; 3yy - copy three, yank word, y$ - yank to eol
+p, P            paste to line below or above if line(s) yanked; at cursor/word
+J               joins current and next lines together
+r, s            replace a single char; R, S replaces multiple chars or line
+
+u               undo (multiple times)
+ctrl-R          undo-the-undo
+~, gUw, guw     toggle case of char over cursor, word to caps, to small
+s'old'new'g	    replace all occurrences of old with new on LINE; use %s... 
+                for whole doc (note - this will act on char(s) inside of 
+                words as well!)
+%               finds matching paren, brace, brackets when placed over one
+. (period)      repeats last action
+gqap, gqG       re-format paragraph, whole page, after pasting, editing
+                see .vimrc, gq remapped to Q, so Qap, QG
+%s/\s\+$//      remove white space at end of sentences
+
+FILES
+-----
+
+:w {filename}   write to file {filename} unless it already exists
+:w! {filename}  overwrite {filename}
+ctrl-G          show path and filename
+:edit .         a file manager
+:set ignorecase and unset with noignorecase for searching
+*, #            place cursor over word and the commands *, # will search word
+:nohlsearch     de-highlight search terms; does not turn hlsearch off
+:saveas         obvious
+:noautoindent   temp. disable autoindent for pasting, etc., OR
+:paste
+:arrow up, dn   or :hi[story] for command history
+ctrl-O          execute one command while in insert mode;remain in insert mode
+
+VISUAL MODE
+___________
+
+v, V            start visual mode for a word or a line
+d, yy           delete, copy the hightlighted text
+p               paste the highlighted text
+
+MULTIPLE FILES
+_____________
+
+:args           list all open files
+:next, previous go to next or previous file
+:first, last    go to first in list, last in list
+:args [new file] will open a new file, but closes all others
+ctrl-^          will quickly rotate two files; to go to more, need :next
+
+SPLIT WINDOWS
+_____________
+
+:split          splits screen in two; same document in both
+ctrl-w w        shift focus
+:close          closes active window; or :q, ZZ, etc.
+:split file2    splits window, starts editing file2
+:split new      split and open new blank doc
+ctrl-w+, -      increase, decrease window size; mouse left click on status
+                line will also work
+:vsplit         verticle split; the above is horiz.
+ctrl-W hjkl     moves between top, bottom, left, right windows
+:qall, :wall,   :wqall, :qall! for same operation on all windows at once
+
+PRINTING
+________
+
+:hardcopy       send whole document to default printer (short :ha)
+:5ha            print line 5
+:1,10ha         print range of lines; does count blank lines; note, with
+                standard default formatting, one page=69 lines.
+
+CUT, COPY, PASTE
+----------------
+
+There are five different scenarios (and there may be some differences when 
+operating inside vs. outside of an X environment):
+
+UPDATE: seems the whole problem is the 'clipboard' is not compiled-in in
+this (or crux's) version; issue the command :echo has('clipboard')
+returns 0 on Arch and Crux; on Gentoo, which has gvim, returns 1 and
+cut/copy/paste works flawleessly on all five methods below.  This is
+confirmed in the first block of the Arch Linux vim wiki.
+
+    1.  Within the same document in the same vim instance:
+
+        Just use the standard yy (yank) and p or P commands or
+        highlight with v or V, then y, then p.
+
+    2.  Within the same vim instance with two (or more) docs open:
+
+        Same as #1
+
+    3.  From an outside application to vim:
+
+        Highlight with mouse, do not right-click-copy; in vim, go to
+        insert mode, then issue shift-ins.
+
+    4.  From vim to an outside application:
+
+        Nothing reliably works, even specifying the regular registers
+        a-z or the special registers called with "* and "+.
+
+    5.  To/from two different vim instances:
+
+        Same as #4.
